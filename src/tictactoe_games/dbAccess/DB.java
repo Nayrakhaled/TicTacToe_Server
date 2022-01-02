@@ -12,6 +12,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,19 +23,90 @@ import org.apache.derby.jdbc.ClientDriver;
  * @author AM STORE
  */
 public class DB {
+
     public static Connection con;
     public static ArrayList<Player> playerList;
     public static ArrayList<Game> gameList;
+    public static String url = "jdbc:derby://localhost:1527/XOGame";
 
     public static void connect() {
         try {
             DriverManager.registerDriver(new ClientDriver());
-            con = DriverManager.getConnection("jdbc:derby://localhost:1527/XOGame", "root", "root");
+            con = DriverManager.getConnection(url, "root", "root");
         } catch (SQLException ex) {
             Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        }
     }
-    
+
+    /*
+    CREATE TABLE Game (
+    gameId int PRIMARY KEY,
+    type varchar(20)
+);
+
+
+
+CREATE TABLE Player (
+    PlayerId int PRIMARY KEY,
+    userName varchar(20),
+    passward varchar(15),
+    playerState varchar(10),
+    score int,
+    gameId int,
+    FOREIGN KEY (gameId) REFERENCES Game(gameId)
+);
+     */
+    public static void createGameTable() {
+         String sql = "CREATE TABLE IF NOT EXISTS Game (\n"
+                + " gameId integer PRIMARY KEY,\n"
+                + " choosenShape varchar(1) ,\n"
+                + " position integer ,\n"
+               
+                + ");";
+
+        try {
+            Statement stmt = con.createStatement();
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void createPlayerTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS Player (\n"
+                + " id integer PRIMARY KEY,\n"
+                + " userName varchar(20) NOT NULL,\n"
+                + " password varchar(20) NOT NULL,\n"
+                + " score integer ,\n"
+                + " gameId integer ,\n"
+                + " FOREIGN KEY (gameId) REFERENCES Game(gameId) ,\n"
+                + ");";
+
+        try {
+            Statement stmt = con.createStatement();
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+/*
+    public static void createPlayerGameTable() {
+         String sql = "CREATE TABLE IF NOT EXISTS PlayerGame (\n"
+                + " id integer PRIMARY KEY,\n"
+                + " userName varchar(20) NOT NULL,\n"
+                + " winner varchar(20) NOT NULL,\n"
+                + " score integer ,\n"
+                + " gameId integer ,\n"
+                + ");";
+
+        try {
+            Statement stmt = con.createStatement();
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+*/
     public static ArrayList<Player> getPlayer() throws SQLException {
         PreparedStatement pst = con.prepareStatement("select * from Player");
         ResultSet res = pst.executeQuery();
@@ -46,7 +118,7 @@ public class DB {
         }
         return playerList;
     }
-    
+
     public static ArrayList<Player> checkPlayer() throws SQLException {
         PreparedStatement pst = con.prepareStatement("select * from Player");
         ResultSet res = pst.executeQuery();
@@ -58,8 +130,8 @@ public class DB {
         }
         return playerList;
     }
-    
-    public static int insertPlayer(Player player) throws SQLException{
+
+    public static int insertPlayer(Player player) throws SQLException {
         PreparedStatement pst = con.prepareStatement("INSERT INTO Player VALUES (?, ?, ?, ?, ?)");
         pst.setString(1, player.getUserName());
         pst.setString(2, player.getPassword());
@@ -68,19 +140,17 @@ public class DB {
         int res = pst.executeUpdate();
         return res;
     }
-    
-     public static int updateScore(int id, Player player) throws SQLException{
-        PreparedStatement pst = con.prepareStatement
-        ("UPDATE Player SET Score = ? WHERE Id = ?");
+
+    public static int updateScore(int id, Player player) throws SQLException {
+        PreparedStatement pst = con.prepareStatement("UPDATE Player SET Score = ? WHERE Id = ?");
         pst.setInt(1, player.getScore());
         pst.setInt(2, id);
         int res = pst.executeUpdate();
         return res;
     }
-     
-     public static int updateMode(int id, Player player) throws SQLException{
-        PreparedStatement pst = con.prepareStatement
-        ("UPDATE Player SET Mode = ? WHERE Id = ?");
+
+    public static int updateMode(int id, Player player) throws SQLException {
+        PreparedStatement pst = con.prepareStatement("UPDATE Player SET Mode = ? WHERE Id = ?");
         pst.setBoolean(1, player.getMode());
         pst.setInt(2, id);
         int res = pst.executeUpdate();
