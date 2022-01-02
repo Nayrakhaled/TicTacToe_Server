@@ -57,13 +57,11 @@ CREATE TABLE Player (
 );
      */
     public static void createGameTable() {
-         String sql = "CREATE TABLE IF NOT EXISTS Game (\n"
+        String sql = "CREATE TABLE IF NOT EXISTS Game (\n"
                 + " gameId integer PRIMARY KEY,\n"
                 + " choosenShape varchar(1) ,\n"
                 + " position integer ,\n"
-               
                 + ");";
-
         try {
             Statement stmt = con.createStatement();
             stmt.execute(sql);
@@ -81,7 +79,6 @@ CREATE TABLE Player (
                 + " gameId integer ,\n"
                 + " FOREIGN KEY (gameId) REFERENCES Game(gameId) ,\n"
                 + ");";
-
         try {
             Statement stmt = con.createStatement();
             stmt.execute(sql);
@@ -89,16 +86,18 @@ CREATE TABLE Player (
             System.out.println(e.getMessage());
         }
     }
-/*
+
     public static void createPlayerGameTable() {
-         String sql = "CREATE TABLE IF NOT EXISTS PlayerGame (\n"
-                + " id integer PRIMARY KEY,\n"
-                + " userName varchar(20) NOT NULL,\n"
-                + " winner varchar(20) NOT NULL,\n"
+        String sql = "CREATE TABLE IF NOT EXISTS PlayerGame (\n"
+                + " playerX integer ,\n"
+                + " playerO integer ,\n"
+                + " winner varchar(20) ,\n"
+                + " date varchar(20) ,\n"
+                + " time varchar(20) ,\n"
+                +" PRIMARY KEY(palyerX, playerO, time, date)  ,\n"
                 + " score integer ,\n"
                 + " gameId integer ,\n"
                 + ");";
-
         try {
             Statement stmt = con.createStatement();
             stmt.execute(sql);
@@ -106,7 +105,7 @@ CREATE TABLE Player (
             System.out.println(e.getMessage());
         }
     }
-*/
+
     public static ArrayList<Player> getPlayer() throws SQLException {
         PreparedStatement pst = con.prepareStatement("select * from Player");
         ResultSet res = pst.executeQuery();
