@@ -26,6 +26,7 @@ public class DB {
 
     public static Connection con;
     public static ArrayList<Player> playerList;
+        public static ArrayList<Player> playerListOnline;
     public static ArrayList<Game> gameList;
     public static String url = "jdbc:derby://localhost:1527/XOGame";
 
@@ -38,24 +39,6 @@ public class DB {
         }
     }
 
-    /*
-    CREATE TABLE Game (
-    gameId int PRIMARY KEY,
-    type varchar(20)
-);
-
-
-
-CREATE TABLE Player (
-    PlayerId int PRIMARY KEY,
-    userName varchar(20),
-    passward varchar(15),
-    playerState varchar(10),
-    score int,
-    gameId int,
-    FOREIGN KEY (gameId) REFERENCES Game(gameId)
-);
-     */
     public static void createGameTable() {
         String sql = "CREATE TABLE IF NOT EXISTS Game (\n"
                 + " gameId integer PRIMARY KEY,\n"
@@ -76,6 +59,7 @@ CREATE TABLE Player (
                 + " userName varchar(20) NOT NULL,\n"
                 + " password varchar(20) NOT NULL,\n"
                 + " score integer ,\n"
+                + " mode integer ,\n"
                 + " gameId integer ,\n"
                 + " FOREIGN KEY (gameId) REFERENCES Game(gameId) ,\n"
                 + ");";
@@ -94,7 +78,7 @@ CREATE TABLE Player (
                 + " winner varchar(20) ,\n"
                 + " date varchar(20) ,\n"
                 + " time varchar(20) ,\n"
-                +" PRIMARY KEY(palyerX, playerO, time, date)  ,\n"
+                + " PRIMARY KEY(palyerX, playerO, time, date)  ,\n"
                 + " score integer ,\n"
                 + " gameId integer ,\n"
                 + ");";
@@ -117,9 +101,22 @@ CREATE TABLE Player (
         }
         return playerList;
     }
+    
+     public static ArrayList<Player> getPlayerOnline() throws SQLException {
+        PreparedStatement pst = con.prepareStatement("select * from Player WHERE mode = 1");
+        ResultSet res = pst.executeQuery();
+        Player player;
+        playerListOnline = new ArrayList<>();
+        while (res.next()) {
+            player = new Player(res.getString("UserName"), res.getInt("Score"), res.getBoolean("Mode"));
+            playerListOnline.add(player);
+        }
+        return playerList;
+    }
+
 
     public static ArrayList<Player> checkPlayer() throws SQLException {
-        PreparedStatement pst = con.prepareStatement("select * from Player");
+        PreparedStatement pst = con.prepareStatement("select * from Player ");
         ResultSet res = pst.executeQuery();
         Player player;
         playerList = new ArrayList<>();
