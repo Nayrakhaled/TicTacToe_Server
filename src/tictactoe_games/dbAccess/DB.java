@@ -26,7 +26,7 @@ public class DB {
 
     public static Connection con;
     public static ArrayList<Player> playerList;
-        public static ArrayList<Player> playerListOnline;
+    public static ArrayList<Player> playerListOnline;
     public static ArrayList<Game> gameList;
     public static String url = "jdbc:derby://localhost:1527/XOGame";
 
@@ -43,7 +43,8 @@ public class DB {
         String sql = "CREATE TABLE IF NOT EXISTS Game (\n"
                 + " gameId integer PRIMARY KEY,\n"
                 + " choosenShape varchar(1) ,\n"
-                + " position integer ,\n"
+                + " row integer ,\n"
+                + " col integer ,\n"
                 + ");";
         try {
             Statement stmt = con.createStatement();
@@ -96,24 +97,23 @@ public class DB {
         Player player;
         playerList = new ArrayList<>();
         while (res.next()) {
-            player = new Player(res.getString("UserName"), res.getInt("Score"), res.getBoolean("Mode"));
+            player = new Player(res.getString("UserName"), res.getInt("Score"), res.getInt("Mode"));
             playerList.add(player);
         }
         return playerList;
     }
-    
-     public static ArrayList<Player> getPlayerOnline() throws SQLException {
+
+    public static ArrayList<Player> getPlayerOnline() throws SQLException {
         PreparedStatement pst = con.prepareStatement("select * from Player WHERE mode = 1");
         ResultSet res = pst.executeQuery();
         Player player;
         playerListOnline = new ArrayList<>();
         while (res.next()) {
-            player = new Player(res.getString("UserName"), res.getInt("Score"), res.getBoolean("Mode"));
+            player = new Player(res.getString("UserName"), res.getInt("Score"), res.getInt("Mode"));
             playerListOnline.add(player);
         }
         return playerList;
     }
-
 
     public static ArrayList<Player> checkPlayer() throws SQLException {
         PreparedStatement pst = con.prepareStatement("select * from Player ");
@@ -131,7 +131,7 @@ public class DB {
         PreparedStatement pst = con.prepareStatement("INSERT INTO Player VALUES (?, ?, ?, ?, ?)");
         pst.setString(1, player.getUserName());
         pst.setString(2, player.getPassword());
-        pst.setBoolean(3, player.getMode());
+        pst.setInt(3, player.getMode());
         pst.setInt(4, player.getScore());
         int res = pst.executeUpdate();
         return res;
@@ -147,7 +147,7 @@ public class DB {
 
     public static int updateMode(int id, Player player) throws SQLException {
         PreparedStatement pst = con.prepareStatement("UPDATE Player SET Mode = ? WHERE Id = ?");
-        pst.setBoolean(1, player.getMode());
+        pst.setInt(1, player.getMode());
         pst.setInt(2, id);
         int res = pst.executeUpdate();
         return res;
