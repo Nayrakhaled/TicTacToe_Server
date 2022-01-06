@@ -21,6 +21,13 @@ public class Player {
         this.mode = mode;
     }
     
+     public Player(String userName,String password, int score, int mode){
+        this.userName = userName;
+        this.password = password;
+        this.score = score;
+        this.mode = mode;
+    }
+    
     public Player(String userName, String password){
         this.userName = userName;
         this.password = password;
