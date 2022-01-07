@@ -27,7 +27,7 @@ public class Database {
 
     public static Connection con;
     public static ArrayList<Player> playerList;
-    public static ArrayList<Player> playerListOnline;
+    public static ArrayList<String> playerListOnline;
     public static ArrayList<Game> gameList;
     public static String url = "jdbc:derby://localhost:1527/XOGame";
     static int count;
@@ -41,7 +41,8 @@ public class Database {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-/*
+
+    /*
     public static void createGameTable() {
         String sql = "CREATE TABLE IF NOT EXISTS Game (\n"
                 + " gameId integer PRIMARY KEY,\n"
@@ -56,8 +57,7 @@ public class Database {
             System.out.println(e.getMessage());
         }
     }
-*/
-
+     */
     public static void createPlayerTable() {
         String sql = "CREATE TABLE IF NOT EXISTS Player (\n"
                 + " id integer PRIMARY KEY AUTO_INCREMENT,\n"
@@ -75,7 +75,8 @@ public class Database {
             System.out.println(e.getMessage());
         }
     }
-/*
+
+    /*
     public static void createPlayerGameTable() {
         String sql = "CREATE TABLE IF NOT EXISTS PlayerGame (\n"
                 + " playerX integer ,\n"
@@ -94,7 +95,7 @@ public class Database {
             System.out.println(e.getMessage());
         }
     }
-*/
+     */
     public static ArrayList<Player> getPlayer() throws SQLException {
         PreparedStatement pst = con.prepareStatement("select * from player");
         ResultSet res = pst.executeQuery();
@@ -107,16 +108,17 @@ public class Database {
         return playerList;
     }
 
-    public static ArrayList<Player> getPlayerOnline() throws SQLException {
-        PreparedStatement pst = con.prepareStatement("select * from player WHERE mode = 1");
+    public static ArrayList<String> getPlayerOnline() throws SQLException {
+        PreparedStatement pst = con.prepareStatement("select username from player WHERE mode = 1");
         ResultSet res = pst.executeQuery();
-        Player player;
+        String player;
         playerListOnline = new ArrayList<>();
         while (res.next()) {
-            player = new Player(res.getString("username"), res.getInt("score"), res.getInt("mode"));
+            player = res.getString("username");
             playerListOnline.add(player);
+            System.out.println("Player online in database" + player);
         }
-        return playerList;
+        return playerListOnline;
     }
 
     public static ArrayList<Player> checkPlayer() throws SQLException {
@@ -130,8 +132,8 @@ public class Database {
         }
         return playerList;
     }
-    
-     public static String checkPassword(Player player) {
+
+    public static String checkPassword(Player player) {
         String result = null;
         try {
             PreparedStatement pst = con.prepareStatement("SELECT password FROM player WHERE username = ? ");
@@ -143,7 +145,7 @@ public class Database {
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-            
+
         }
         return result;
     }
@@ -187,12 +189,35 @@ public class Database {
         return res;
     }
 
-    public static int updateMode(int id, Player player) throws SQLException {
-        PreparedStatement pst = con.prepareStatement("UPDATE player SET mode = ? WHERE id = ?");
-        pst.setInt(1, player.getMode());
-        pst.setInt(2, id);
-        int res = pst.executeUpdate();
-        return res;
+    public static int updateMode(Player player) {
+        int result = 0;
+        try {
+            PreparedStatement pst = con.prepareStatement("UPDATE player SET mode = ? WHERE username = ? ");
+            System.out.println("mode in db" + player.getMode());
+            System.out.println("name in db" + player.getUserName());
+
+            pst.setInt(1, player.getMode());
+            pst.setString(2, player.getUserName());
+            result = pst.executeUpdate();
+            System.out.println("update mode" + result);
+        } catch (SQLException ex) {
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+
+    public static int getMode(Player player) throws SQLException {
+        int mode;
+        String result = null;
+        PreparedStatement pst = con.prepareStatement("SELECT mode from player WHERE username = ?");
+        pst.setString(1, player.getUserName());
+        ResultSet res = pst.executeQuery();
+        if (res.next()) {
+            result = res.getString("mode");
+        }
+        mode = Integer.parseInt(result);
+        System.out.println("result in db mode" + res.getString("mode"));
+        return mode;
     }
 
     public static void closeDB() throws SQLException {

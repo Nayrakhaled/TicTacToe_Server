@@ -40,18 +40,21 @@ public class LoginController {
         exist = DBAccess.Database.checkPlayerExist(player);
         System.out.println("exist" + exist);
 
-        if (exist) { // exist
-            String pass = DBAccess.Database.checkPassword(player);
-            System.out.println("pass" + pass);
-            if (pass.equals(player.getPassword())) {  // check password
-                PrintStream.println(1);
-            }else{
-                 PrintStream.println(0); // password wrong 
-            }
+        if (exist) {// exist   
+                String pass = DBAccess.Database.checkPassword(player);
+                System.out.println("pass" + pass);
+                
+                //new ModeController(value, socket);
+                if (pass.equals(player.getPassword())) {  // check password
+                    PrintStream.println(1);
+                } else {
+                    PrintStream.println(0); // password wrong 
+                }
+            
         } else { //  not exist
             PrintStream.println(-1);
         }
-        
+
         try {
             DBAccess.Database.closeDB();
         } catch (SQLException ex) {
