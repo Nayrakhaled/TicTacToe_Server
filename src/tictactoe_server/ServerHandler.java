@@ -7,9 +7,9 @@ package tictactoe_server;
 
 import Controller.AvaliableList;
 import Controller.RegisterController;
-import Controller.ModeController;
 import Controller.LoginController;
 import Controller.ModeController;
+import Controller.RequestPlayController;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -59,11 +59,15 @@ public class ServerHandler extends Thread {
                         break;
                     case "Login":
                         new LoginController(jsonObject, FXMLDocumentBase.socket);
+                        break;
                     case "Mode":
                         new ModeController(jsonObject, FXMLDocumentBase.socket);
                         break;
                     case "AvialableList":
-                        new AvaliableList( FXMLDocumentBase.socket);
+                        new AvaliableList(FXMLDocumentBase.socket);
+                        break;
+                    case "requsetPlay":
+                        new RequestPlayController(jsonObject, FXMLDocumentBase.socket);
                         break;
                 }
             } catch (SocketException so) {

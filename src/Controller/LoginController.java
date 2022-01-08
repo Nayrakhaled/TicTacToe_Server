@@ -6,7 +6,9 @@
 package Controller;
 
 import Module.Player;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.sql.SQLException;
@@ -23,12 +25,13 @@ public class LoginController {
     private Player player;
     private boolean exist;
     private int existed;
-    private PrintStream PrintStream;
+    private PrintStream printStream;
 
     public LoginController(JSONObject obj, Socket socket) {
         player = new Player();
         try {
-            PrintStream = new PrintStream(socket.getOutputStream());
+            printStream = new PrintStream(socket.getOutputStream());
+
         } catch (IOException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -41,21 +44,21 @@ public class LoginController {
         System.out.println("exist" + exist);
 
         if (exist) {// exist   
-                String pass = DBAccess.Database.checkPassword(player);
-                System.out.println("pass" + pass);
-                
-                //new ModeController(value, socket);
-                if (pass.equals(player.getPassword())) {  // check password
-                    PrintStream.println(1);
-                } else {
-                    PrintStream.println(0); // password wrong 
-                }
-            
+            String pass = DBAccess.Database.checkPassword(player);
+            System.out.println("pass" + pass);
+            if (pass.equals(player.getPassword())) {  // check password
+                printStream.println(1);
+                System.out.println("Server==: " + "Here");
+            } else {
+                printStream.println(0); // password wrong 
+            }
+
         } else { //  not exist
-            PrintStream.println(-1);
+            printStream.println(-1);
         }
 
         try {
+            printStream.flush();
             DBAccess.Database.closeDB();
         } catch (SQLException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);

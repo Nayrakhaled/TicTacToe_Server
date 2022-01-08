@@ -6,7 +6,11 @@
 package Controller;
 
 import Module.Player;
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.sql.SQLException;
@@ -23,13 +27,13 @@ import org.json.simple.JSONObject;
 public class AvaliableList {
 
     ArrayList<String> playerOnline;
-    private PrintStream PrintStream;
+    private PrintStream printStream;
 
     public AvaliableList(Socket socket) {
 
         try {
             try {
-                PrintStream = new PrintStream(socket.getOutputStream());
+                printStream = new PrintStream(socket.getOutputStream());
             } catch (IOException ex) {
                 Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -42,11 +46,12 @@ public class AvaliableList {
                 jsonObject.put("Key", "List");
                 jsonObject.put("AvaliableList", playerOnline);
                 System.out.println("json server online" + jsonObject);
-                PrintStream.println(jsonObject);
+                printStream.println(jsonObject);
                 
             } else {
-                PrintStream.println(0);
+                printStream.println(0);
             }
+
         } catch (SQLException ex) {
             Logger.getLogger(AvaliableList.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -23,12 +23,12 @@ public class RegisterController {
     private Player player;
     private boolean exist;
     private int inserted;
-    private PrintStream PrintStream;
+    private PrintStream printStream;
 
     public RegisterController(JSONObject obj, Socket socket) {
         player = new Player();
         try {
-            PrintStream = new PrintStream(socket.getOutputStream());
+            printStream = new PrintStream(socket.getOutputStream());
         } catch (IOException ex) {
             Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -47,14 +47,14 @@ public class RegisterController {
             inserted = DBAccess.Database.insertPlayer(player);
             if (inserted == 0) { // insert
                 System.out.println("insert");
-                PrintStream.println(1);
+                printStream.println(1);
             } else { // insert failed
                 System.out.println("not insert");
-                PrintStream.println(0);
+                printStream.println(0);
             }
         } else { // user exist
                 System.out.println("Exist");
-                PrintStream.println(2);
+                printStream.println(2);
         }
         try {
             DBAccess.Database.closeDB();

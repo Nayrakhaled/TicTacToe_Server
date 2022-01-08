@@ -109,7 +109,7 @@ public class Database {
     }
 
     public static ArrayList<String> getPlayerOnline() throws SQLException {
-        PreparedStatement pst = con.prepareStatement("select username from player WHERE mode = 1");
+        PreparedStatement pst = con.prepareStatement("select username from player WHERE mode = 1 and busy = 0 ");
         ResultSet res = pst.executeQuery();
         String player;
         playerListOnline = new ArrayList<>();
@@ -178,6 +178,31 @@ public class Database {
             int res = pst.executeUpdate();
         } catch (SQLException ex) {
         }
+        return res;
+    }
+    
+     public static boolean checkBusyPlayer(Player player) {
+        boolean busy = false;
+        try {
+            PreparedStatement pst = con.prepareStatement("SELECT busy FROM player WHERE username = ? ");
+            System.out.println(player.getUserName());
+            pst.setString(1, player.getUserName());
+            ResultSet res = pst.executeQuery();
+            if (res.next()) {
+               if(res.getString("busy").equals("1")) busy = true;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        System.out.println("boolean Busy" + busy);
+        return busy;
+    }
+     
+     public static int updateBusy( Player player) throws SQLException {
+        PreparedStatement pst = con.prepareStatement("UPDATE player SET busy = ? WHERE username = ?");
+        pst.setInt(1, player.getBusy());
+        pst.setString(2, player.getUserName());
+        int res = pst.executeUpdate();
         return res;
     }
 

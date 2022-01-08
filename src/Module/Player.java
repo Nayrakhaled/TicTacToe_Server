@@ -11,7 +11,7 @@ package Module;
  */
 public class Player {
 
-    private int id, score;
+    private int id, score, busy;
     private String userName, password;
     private int mode;
 
@@ -51,6 +51,10 @@ public class Player {
     public void setPassword(String password) {
         this.password = password;
     }
+    
+     public void setBusy(int busy) {
+        this.busy = busy;
+    }
 
     public void setMode(int mode) {
         this.mode = mode;
@@ -70,6 +74,10 @@ public class Player {
 
     public String getPassword() {
         return password;
+    }
+    
+    public int getBusy() {
+        return busy;
     }
 
     public int getMode() {
