@@ -42,60 +42,6 @@ public class Database {
         }
     }
 
-    /*
-    public static void createGameTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS Game (\n"
-                + " gameId integer PRIMARY KEY,\n"
-                + " choosenShape varchar(1) ,\n"
-                + " row integer ,\n"
-                + " col integer ,\n"
-                + ");";
-        try {
-            Statement stmt = con.createStatement();
-            stmt.execute(sql);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-     */
-    public static void createPlayerTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS Player (\n"
-                + " id integer PRIMARY KEY AUTO_INCREMENT,\n"
-                + " userName varchar(20) NOT NULL,\n"
-                + " password varchar(20) NOT NULL,\n"
-                + " score integer ,\n"
-                + " mode integer ,\n"
-                + " gameId integer ,\n"
-                + " FOREIGN KEY (gameId) REFERENCES Game(gameId) ,\n"
-                + ");";
-        try {
-            Statement stmt = con.createStatement();
-            stmt.execute(sql);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    /*
-    public static void createPlayerGameTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS PlayerGame (\n"
-                + " playerX integer ,\n"
-                + " playerO integer ,\n"
-                + " winner varchar(20) ,\n"
-                + " date varchar(20) ,\n"
-                + " time varchar(20) ,\n"
-                + " PRIMARY KEY(palyerX, playerO, time, date)  ,\n"
-                + " score integer ,\n"
-                + " gameId integer ,\n"
-                + ");";
-        try {
-            Statement stmt = con.createStatement();
-            stmt.execute(sql);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-     */
     public static ArrayList<Player> getPlayer() throws SQLException {
         PreparedStatement pst = con.prepareStatement("select * from player");
         ResultSet res = pst.executeQuery();
@@ -119,6 +65,27 @@ public class Database {
             System.out.println("Player online in database" + player);
         }
         return playerListOnline;
+    }
+
+    public static int getOnline() throws SQLException {
+            PreparedStatement pst = con.prepareStatement("SELECT count(username) FROM player WHERE mode = 1 ");
+            ResultSet res = pst.executeQuery();
+            res.next();
+            int count = res.getInt(1);
+            System.out.println("count = " + count);       
+        return count;
+
+    }
+
+    public static int getOffline() throws SQLException {
+       
+            PreparedStatement pst = con.prepareStatement("SELECT count(username) FROM player WHERE mode = 0 ");
+            ResultSet res = pst.executeQuery();
+            res.next();
+            int count = res.getInt(1);
+            System.out.println("count = " + count);
+       
+        return count;
     }
 
     public static ArrayList<Player> checkPlayer() throws SQLException {
@@ -170,26 +137,30 @@ public class Database {
 
     public static int insertPlayer(Player player) {
         try {
-            PreparedStatement pst = con.prepareStatement("INSERT INTO player VALUES (?, ?, ?, ?)");
+            PreparedStatement pst = con.prepareStatement("INSERT INTO player VALUES (?, ?, ?, ?, ?)");
             pst.setString(1, player.getUserName());
             pst.setString(2, player.getPassword());
             pst.setInt(3, player.getScore());
             pst.setInt(4, player.getMode());
+            pst.setInt(5, player.getBusy());
+
             int res = pst.executeUpdate();
         } catch (SQLException ex) {
         }
         return res;
     }
-    
-     public static boolean checkBusyPlayer(Player player) {
-        boolean busy = false;
+
+    public static int checkBusyPlayer(Player player) {
+        int busy = 0;
         try {
             PreparedStatement pst = con.prepareStatement("SELECT busy FROM player WHERE username = ? ");
             System.out.println(player.getUserName());
             pst.setString(1, player.getUserName());
             ResultSet res = pst.executeQuery();
             if (res.next()) {
-               if(res.getString("busy").equals("1")) busy = true;
+                if (res.getString("busy").equals("1")) {
+                    busy = 1;
+                }
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -197,8 +168,8 @@ public class Database {
         System.out.println("boolean Busy" + busy);
         return busy;
     }
-     
-     public static int updateBusy( Player player) throws SQLException {
+
+    public static int updateBusy(Player player) throws SQLException {
         PreparedStatement pst = con.prepareStatement("UPDATE player SET busy = ? WHERE username = ?");
         pst.setInt(1, player.getBusy());
         pst.setString(2, player.getUserName());

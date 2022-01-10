@@ -4,33 +4,36 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 public class FXMLDocumentBase extends AnchorPane {
 
-    protected final CategoryAxis categoryAxis;
-    protected final NumberAxis numberAxis;
-    protected final LineChart chart;
     protected final Button serverBtn;
+    protected final PieChart pieChart;
+
     ServerSocket server;
     public static Socket socket;
     boolean state = false;
+    private Stage stage;
 
-    public FXMLDocumentBase() {
+    public FXMLDocumentBase(Stage stage) throws SQLException {
 
-        categoryAxis = new CategoryAxis();
-        numberAxis = new NumberAxis();
-        chart = new LineChart(categoryAxis, numberAxis);
         serverBtn = new Button();
-
+        pieChart = new PieChart();
+        this.stage = stage;
+        
+        
         setMaxHeight(USE_PREF_SIZE);
         setMaxWidth(USE_PREF_SIZE);
         setMinHeight(USE_PREF_SIZE);
@@ -38,25 +41,41 @@ public class FXMLDocumentBase extends AnchorPane {
         setPrefHeight(400.0);
         setPrefWidth(600.0);
 
-        categoryAxis.setLabel("Online");
-        categoryAxis.setSide(javafx.geometry.Side.BOTTOM);
-
-        numberAxis.setLabel("Offline");
-        numberAxis.setSide(javafx.geometry.Side.LEFT);
-        chart.setLayoutX(37.0);
-        chart.setLayoutY(40.0);
-        chart.setPrefHeight(284.0);
-        chart.setPrefWidth(498.0);
-        chart.setTitle("online_offline");
-
-        serverBtn.setLayoutX(274.0);
-        serverBtn.setLayoutY(331.0);
+        serverBtn.setLayoutX(258.0);
+        serverBtn.setLayoutY(309.0);
         serverBtn.setMnemonicParsing(false);
+        serverBtn.setPrefHeight(25.0);
+        serverBtn.setPrefWidth(62.0);
         serverBtn.setText("Start");
+        serverBtn.setFont(new Font("System Bold", 14.0));
 
-        getChildren().add(chart);
+        pieChart.setLayoutX(170.0);
+        pieChart.setLayoutY(21.0);
+        pieChart.setPrefHeight(254.0);
+        pieChart.setPrefWidth(238.0);
+
         getChildren().add(serverBtn);
+        getChildren().add(pieChart);
 
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
+                    new PieChart.Data("Online", 14),
+                    new PieChart.Data("Offline", 2)
+        );
+        
+
+        pieChart.setClockwise(true);
+
+        //Setting the length of the label line 
+        pieChart.setLabelLineLength(100);
+
+        //Setting the labels of the pie chart visible  
+        pieChart.setLabelsVisible(true);
+
+        //Setting the start angle of the pie chart  
+        pieChart.setStartAngle(180);
+
+        
+        pieChart.setData(pieChartData);
         serverBtn.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -116,5 +135,6 @@ public class FXMLDocumentBase extends AnchorPane {
 
             }
         });
+
     }
 }

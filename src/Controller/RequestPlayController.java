@@ -9,9 +9,11 @@ import Module.Player;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONObject;
+import tictactoe_server.ServerHandler;
 
 /**
  *
@@ -20,24 +22,19 @@ import org.json.simple.JSONObject;
 public class RequestPlayController {
 
     Player player;
-    boolean isBusy;
-    PrintStream printStream;
+    private int isBusy;
+    private String result;
 
-    public RequestPlayController(JSONObject obj, Socket socket) {
+    public RequestPlayController() {
         player = new Player();
-        try {
-            printStream = new PrintStream(socket.getOutputStream());
-        } catch (IOException ex) {
-            Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+    }
+
+    public String request(JSONObject obj, Socket socket, Vector<ServerHandler> vector) {
         DBAccess.Database.connect();
-        JSONObject value = (JSONObject) obj.get("value");
-        System.out.println("aganist" + value.get("aganist").toString());
-        player.setUserName(value.get("aganist").toString());
-        isBusy = DBAccess.Database.checkBusyPlayer(player);
-        printStream.println(isBusy);
         
-        
-        
+//        player.setUserName(value.get("aganist").toString());
+//        isBusy = DBAccess.Database.checkBusyPlayer(player);
+        return result;
     }
 }

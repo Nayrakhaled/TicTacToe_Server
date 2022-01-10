@@ -24,17 +24,16 @@ public class ModeController {
     private PrintStream PrintStream;
     private int result;
 
-    public ModeController(JSONObject obj, Socket socket) {
+    public ModeController() {
+
+        player = new Player();
+    }
+
+    public int mode(JSONObject obj, Socket socket) {
         try {
-            player = new Player();
-            try {
-                PrintStream = new PrintStream(socket.getOutputStream());
-            } catch (IOException ex) {
-                Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
-            }
             JSONObject value = (JSONObject) obj.get("value");
             player.setUserName(value.get("user").toString());
-            System.out.println("user in mode server"  + player.getUserName());
+            System.out.println("user in mode server" + player.getUserName());
             DBAccess.Database.connect();
             int mode = DBAccess.Database.getMode(player);
             System.out.println("mode in controller" + mode);
@@ -48,18 +47,13 @@ public class ModeController {
             result = DBAccess.Database.updateMode(player);
 
             if (result != 0) {
-                PrintStream.println(1);
+                result = 1;
             } else {
-                PrintStream.println(0);
+                result = 0;
             }
-
         } catch (SQLException ex) {
             Logger.getLogger(ModeController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        try {
-            DBAccess.Database.closeDB();
-        } catch (SQLException ex) {
-            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        return result;
     }
 }

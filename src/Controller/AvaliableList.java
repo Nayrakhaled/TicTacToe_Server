@@ -32,11 +32,9 @@ public class AvaliableList {
     public AvaliableList(Socket socket) {
 
         try {
-            try {
-                printStream = new PrintStream(socket.getOutputStream());
-            } catch (IOException ex) {
-                Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            System.out.println("AvaliableList in server first");
+            printStream = new PrintStream(socket.getOutputStream());
+
             DBAccess.Database.connect();
             playerOnline = new ArrayList<>();
             playerOnline = DBAccess.Database.getPlayerOnline();
@@ -47,12 +45,14 @@ public class AvaliableList {
                 jsonObject.put("AvaliableList", playerOnline);
                 System.out.println("json server online" + jsonObject);
                 printStream.println(jsonObject);
-                
+
             } else {
                 printStream.println(0);
             }
 
         } catch (SQLException ex) {
+            Logger.getLogger(AvaliableList.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(AvaliableList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONObject;
+import tictactoe_server.ServerHandler;
 
 /**
  *
@@ -25,16 +26,14 @@ public class LoginController {
     private Player player;
     private boolean exist;
     private int existed;
-    private PrintStream printStream;
+    private int result;
 
     public LoginController(JSONObject obj, Socket socket) {
         player = new Player();
-        try {
-            printStream = new PrintStream(socket.getOutputStream());
 
-        } catch (IOException ex) {
-            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    }
+
+    public int login(JSONObject obj, Socket socket) {
         JSONObject value = (JSONObject) obj.get("value");
         player.setUserName(value.get("user").toString());
         player.setPassword(value.get("pass").toString());
@@ -47,21 +46,21 @@ public class LoginController {
             String pass = DBAccess.Database.checkPassword(player);
             System.out.println("pass" + pass);
             if (pass.equals(player.getPassword())) {  // check password
-                printStream.println(1);
+                result = 1;
+                ServerHandler.vectorOnline.get(0).username = player.getUserName();
                 System.out.println("Server==: " + "Here");
             } else {
-                printStream.println(0); // password wrong 
+                result = 0; // password wrong 
             }
-
         } else { //  not exist
-            printStream.println(-1);
+            result = -1;
         }
-
         try {
-            printStream.flush();
             DBAccess.Database.closeDB();
         } catch (SQLException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return result;
     }
+
 }
