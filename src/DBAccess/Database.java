@@ -30,6 +30,7 @@ public class Database {
     public static ArrayList<String> playerListOnline;
     public static ArrayList<Game> gameList;
     public static String url = "jdbc:derby://localhost:1527/XOGame";
+    //                             jdbc:derby://localhost:1527/XOGame
     static int count;
     static int res;
 
@@ -143,7 +144,6 @@ public class Database {
             pst.setInt(3, player.getScore());
             pst.setInt(4, player.getMode());
             pst.setInt(5, player.getBusy());
-
             int res = pst.executeUpdate();
         } catch (SQLException ex) {
         }
