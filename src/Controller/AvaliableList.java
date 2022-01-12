@@ -5,20 +5,17 @@
  */
 package Controller;
 
-import Module.Player;
-import java.io.BufferedWriter;
-import java.io.DataOutputStream;
+
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 /**
  *
@@ -53,6 +50,8 @@ public class AvaliableList {
         } catch (SQLException ex) {
             Logger.getLogger(AvaliableList.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
+            Logger.getLogger(AvaliableList.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JSONException ex) {
             Logger.getLogger(AvaliableList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

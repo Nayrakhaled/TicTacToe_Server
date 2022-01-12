@@ -12,11 +12,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.derby.iapi.reference.ClassName;
 import org.apache.derby.jdbc.ClientDriver;
 
 /**
@@ -30,7 +28,6 @@ public class Database {
     public static ArrayList<String> playerListOnline;
     public static ArrayList<Game> gameList;
     public static String url = "jdbc:derby://localhost:1527/XOGame";
-    //                             jdbc:derby://localhost:1527/XOGame
     static int count;
     static int res;
 

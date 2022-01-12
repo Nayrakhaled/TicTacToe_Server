@@ -6,13 +6,8 @@
 package Controller;
 
 import Module.Player;
-import java.io.IOException;
-import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.json.simple.JSONObject;
 import tictactoe_server.ServerHandler;
 
 /**
@@ -30,11 +25,5 @@ public class RequestPlayController {
 
     }
 
-    public String request(JSONObject obj, Socket socket, Vector<ServerHandler> vector) {
-        DBAccess.Database.connect();
-        
-//        player.setUserName(value.get("aganist").toString());
-//        isBusy = DBAccess.Database.checkBusyPlayer(player);
-        return result;
-    }
+  
 }
