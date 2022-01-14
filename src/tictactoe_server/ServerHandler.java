@@ -160,6 +160,14 @@ public class ServerHandler extends Thread {
                             System.out.println("response play " + message);
 
                             break;
+                        case "requestMovement":
+                            JSONObject valueOfSymbol = (JSONObject) jSONObject.get("value");
+                            for(int i=0; i< vectorOnline.size();i++){
+                                ServerHandler handler = vectorOnline.get(i);
+                                if(handler.username.equals(valueOfSymbol.get("aganist").toString())){
+                                    handler.printStream.println(message);
+                                }
+                            }
                     }// switch 
                 } catch (SocketException sx) {
                     try {
