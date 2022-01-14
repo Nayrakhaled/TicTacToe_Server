@@ -155,7 +155,16 @@ public class ServerHandler extends Thread {
                             }
                             break;
                     }// switch 
-                } catch (JSONException ex) {
+                }catch(SocketException sx){
+                    try {
+                        dataInputStream.close();
+                        printStream.close();
+                        socket.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(ServerHandler.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } 
+                catch (JSONException ex) {
                     Logger.getLogger(ServerHandler.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
                     Logger.getLogger(ServerHandler.class.getName()).log(Level.SEVERE, null, ex);

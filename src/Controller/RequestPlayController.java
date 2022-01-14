@@ -6,14 +6,11 @@
 package Controller;
 
 import Module.Player;
-import java.net.Socket;
 import java.sql.SQLException;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
-import tictactoe_server.ServerHandler;
 
 /**
  *
