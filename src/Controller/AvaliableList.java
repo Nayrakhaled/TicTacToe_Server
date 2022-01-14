@@ -29,7 +29,7 @@ public class AvaliableList {
     public AvaliableList(Socket socket) {
 
         try {
-            System.out.println("AvaliableList in server first");
+           // System.out.println("AvaliableList in server first");
             printStream = new PrintStream(socket.getOutputStream());
 
             DBAccess.Database.connect();
@@ -40,7 +40,7 @@ public class AvaliableList {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("Key", "List");
                 jsonObject.put("AvaliableList", playerOnline);
-                System.out.println("json server online" + jsonObject);
+               // System.out.println("json server online" + jsonObject);
                 printStream.println(jsonObject);
 
             } else {

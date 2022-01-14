@@ -23,7 +23,7 @@ public class FXMLDocumentBase extends AnchorPane {
     protected final PieChart pieChart;
 
     ServerSocket server;
-    public static Socket socket;
+    public Socket socket;
     boolean state = false;
     private Stage stage;
 

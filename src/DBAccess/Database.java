@@ -60,7 +60,7 @@ public class Database {
         while (res.next()) {
             player = res.getString("username");
             playerListOnline.add(player);
-            System.out.println("Player online in database" + player);
+           // System.out.println("Player online in database" + player);
         }
         return playerListOnline;
     }
@@ -147,12 +147,12 @@ public class Database {
         return res;
     }
 
-    public static int checkBusyPlayer(Player player) {
+    public static int checkBusyPlayer(String player) {
         int busy = 0;
         try {
             PreparedStatement pst = con.prepareStatement("SELECT busy FROM player WHERE username = ? ");
-            System.out.println(player.getUserName());
-            pst.setString(1, player.getUserName());
+            System.out.println(player);
+            pst.setString(1, player);
             ResultSet res = pst.executeQuery();
             if (res.next()) {
                 if (res.getString("busy").equals("1")) {
