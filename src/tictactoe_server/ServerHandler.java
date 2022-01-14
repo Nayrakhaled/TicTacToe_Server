@@ -154,8 +154,14 @@ public class ServerHandler extends Thread {
                                 }
                             }
                             break;
+                        case "logout":
+                            LoginController logout = new LoginController();
+                            JSONObject objj = logout.login(message);
+                            System.out.println("response play " + message);
+
+                            break;
                     }// switch 
-                }catch(SocketException sx){
+                } catch (SocketException sx) {
                     try {
                         dataInputStream.close();
                         printStream.close();
@@ -163,8 +169,7 @@ public class ServerHandler extends Thread {
                     } catch (IOException ex) {
                         Logger.getLogger(ServerHandler.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } 
-                catch (JSONException ex) {
+                } catch (JSONException ex) {
                     Logger.getLogger(ServerHandler.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
                     Logger.getLogger(ServerHandler.class.getName()).log(Level.SEVERE, null, ex);

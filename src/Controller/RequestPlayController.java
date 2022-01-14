@@ -68,6 +68,7 @@ public class RequestPlayController {
                 if (isBusy != 0) {
                     object = new JSONObject();
                     object.put("Key", "responseRequest");
+                    object.put("vs", player.getUserName());
                     object.put("response", "1");
                 }
             }

@@ -31,17 +31,17 @@ public class LoginController {
     }
 
     public JSONObject login(String message) {
-        JSONObject jSONObject = null; 
+        JSONObject jSONObject = null;
         try {
             JSONObject obj = new JSONObject(message);
             JSONObject value = (JSONObject) obj.get("value");
             player.setUserName(value.get("user").toString());
             player.setPassword(value.get("pass").toString());
-            
+
             DBAccess.Database.connect();
             exist = DBAccess.Database.checkPlayerExist(player);
             System.out.println("exist" + exist);
-            
+
             if (exist) {// exist
                 String pass = DBAccess.Database.checkPassword(player);
                 System.out.println("pass" + pass);
@@ -56,7 +56,7 @@ public class LoginController {
             } else { //  not exist
                 result = "-1";
             }
-            
+
             jSONObject = new JSONObject();
             jSONObject.put("Key", "login");
             jSONObject.put("response", result);
@@ -66,11 +66,30 @@ public class LoginController {
             } catch (SQLException ex) {
                 Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
         } catch (JSONException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return jSONObject;
+    }
+
+    public void logout(String message) {
+        try {
+            JSONObject obj = new JSONObject(message);
+            player.setUserName(obj.get("player").toString());
+            player.setBusy((int) obj.get("busy"));
+            player.setMode((int) obj.get("mode"));
+            
+            DBAccess.Database.connect();
+            DBAccess.Database.updateBusy(player);
+            DBAccess.Database.updateMode(player);
+            System.out.println("exist" + exist);
+        } catch (JSONException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
 }

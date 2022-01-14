@@ -32,16 +32,15 @@ public class ModeController {
         try {
             JSONObject value = (JSONObject) obj.get("value");
             player.setUserName(value.get("user").toString());
-            player.setMode(1);
+            
             DBAccess.Database.connect();
             int mode = DBAccess.Database.getMode(player);
             System.out.println("mode in controller" + mode);
-            if (mode == 1) {
-                player.setMode(0);
-                System.out.println("mode if == 1  " + player.getMode());
-            } else {
+            if (mode == 0) {
                 player.setMode(1);
-                System.out.println("mode else " + player.getMode());
+                System.out.println("mode if == 1  " + player.getMode());
+            } else if (mode == 1) {
+                player.setMode(1);
             }
             result = DBAccess.Database.updateMode(player);
 

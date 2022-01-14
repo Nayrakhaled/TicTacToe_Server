@@ -9,6 +9,7 @@ package Controller;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -47,7 +48,15 @@ public class AvaliableList {
                 printStream.println(0);
             }
 
-        } catch (SQLException ex) {
+        }catch(SocketException se){
+            try {
+                printStream.close();
+                socket.close();
+            } catch (IOException ex) {
+                Logger.getLogger(AvaliableList.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } 
+        catch (SQLException ex) {
             Logger.getLogger(AvaliableList.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(AvaliableList.class.getName()).log(Level.SEVERE, null, ex);
